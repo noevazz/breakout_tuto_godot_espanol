@@ -1,0 +1,209 @@
+[gd_scene load_steps=13 format=1]
+
+[ext_resource path="res://scenes/bloque.tscn" type="PackedScene" id=1]
+[ext_resource path="res://img/bola.png" type="Texture" id=2]
+[ext_resource path="res://img/paleta.png" type="Texture" id=3]
+
+[sub_resource type="CircleShape2D" id=1]
+
+custom_solver_bias = 0.0
+radius = 4.38144
+
+[sub_resource type="GDScript" id=2]
+
+script/source = "extends RigidBody2D
+
+var pos_inicial
+##codigo de la bola
+func _ready():
+	pos_inicial = get_pos()
+	set_fixed_process(true)
+
+func _fixed_process(delta):
+	var obj_chocados = get_colliding_bodies()
+	
+	for obj in obj_chocados:
+		if (obj.is_in_group(\"bloques\")):
+			obj.queue_free()
+		pass
+		
+	pass
+
+
+func _on_VisibilityNotifier2D_exit_viewport( viewport ):
+	set_pos(pos_inicial)
+	set_linear_velocity(Vector2())
+	apply_impulse(Vector2(), Vector2(50,-200))
+	pass # replace with function body
+"
+
+[sub_resource type="ConvexPolygonShape2D" id=3]
+
+custom_solver_bias = 0.0
+points = Vector2Array( 16.6756, -7.43822, 16.6756, -9.43822, 27.6756, -9.43822, 32.6756, -4.43822, 32.6756, 5.56178, 27.6756, 10.5618 )
+
+[sub_resource type="ConvexPolygonShape2D" id=4]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -31.3244, 5.56178, -31.3244, -4.43822, -26.3244, -9.43822, -15.3244, -9.43822, -15.3244, -7.43822, -25.3244, 10.5618, -26.3244, 10.5618 )
+
+[sub_resource type="ConvexPolygonShape2D" id=5]
+
+custom_solver_bias = 0.0
+points = Vector2Array( 16.6756, -7.43822, 27.6756, 10.5618, -25.3244, 10.5618, -15.3244, -7.43822 )
+
+[sub_resource type="GDScript" id=6]
+
+script/source = "extends KinematicBody2D
+func _ready():
+	set_process(true)
+	
+func _process(delta):
+	var pos = get_pos()
+	set_pos(Vector2( get_viewport().get_mouse_pos().x ,pos.y ))
+	pass
+"
+
+[sub_resource type="ConvexPolygonShape2D" id=7]
+
+custom_solver_bias = 0.0
+points = Vector2Array( 522, -18, 520, 310, 500, 306, 500, 0 )
+
+[sub_resource type="ConvexPolygonShape2D" id=8]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -18, -14, 522, -18, 500, 0, 0, 0 )
+
+[sub_resource type="ConvexPolygonShape2D" id=9]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -20, 300, -18, -14, 0, 0, 0, 300 )
+
+[node name="main" type="Node2D"]
+
+[node name="bloque" parent="." instance=ExtResource( 1 )]
+
+transform/pos = Vector2( 92, 99 )
+
+[node name="bloque1" parent="." instance=ExtResource( 1 )]
+
+transform/pos = Vector2( 173, 100 )
+
+[node name="bloque2" parent="." instance=ExtResource( 1 )]
+
+transform/pos = Vector2( 253, 100 )
+
+[node name="bloque3" parent="." instance=ExtResource( 1 )]
+
+transform/pos = Vector2( 343, 100 )
+
+[node name="bloque4" parent="." instance=ExtResource( 1 )]
+
+transform/pos = Vector2( 423, 100 )
+
+[node name="bola" type="RigidBody2D" parent="."]
+
+editor/display_folded = true
+transform/pos = Vector2( 250.415, 220.499 )
+input/pickable = false
+shapes/0/shape = SubResource( 1 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/0/trigger = false
+collision/layers = 1
+collision/mask = 1
+mode = 0
+mass = 1.0
+friction = 0.0
+bounce = 1.0
+gravity_scale = 0.0
+custom_integrator = false
+continuous_cd = 0
+contacts_reported = 1
+contact_monitor = true
+sleeping = false
+can_sleep = true
+velocity/linear = Vector2( 50, -200 )
+velocity/angular = 0.0
+damp_override/linear = 0.0
+damp_override/angular = 0.0
+script/script = SubResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="bola"]
+
+texture = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="bola"]
+
+shape = SubResource( 1 )
+trigger = false
+_update_shape_index = 0
+
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="bola"]
+
+transform/pos = Vector2( -6.19888e-06, 6.19888e-06 )
+transform/scale = Vector2( 0.400001, 0.400001 )
+rect = Rect2( -10, -10, 20, 20 )
+
+[node name="paleta" type="KinematicBody2D" parent="."]
+
+transform/pos = Vector2( 250.324, 246.438 )
+input/pickable = false
+shapes/0/shape = SubResource( 3 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/0/trigger = false
+shapes/1/shape = SubResource( 4 )
+shapes/1/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/1/trigger = false
+shapes/2/shape = SubResource( 5 )
+shapes/2/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/2/trigger = false
+collision/layers = 1
+collision/mask = 1
+collision/margin = 0.08
+script/script = SubResource( 6 )
+
+[node name="Sprite" type="Sprite" parent="paleta"]
+
+transform/pos = Vector2( 0.661285, 0.566818 )
+texture = ExtResource( 3 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="paleta"]
+
+build_mode = 0
+polygon = Vector2Array( -15.3244, -7.43822, 16.6756, -7.43822, 16.6756, -9.43822, 27.6756, -9.43822, 32.6756, -4.43822, 32.6756, 5.56178, 27.6756, 10.5618, -25.3244, 10.5618, -26.3244, 10.5618, -31.3244, 5.56178, -31.3244, -4.43822, -26.3244, -9.43822, -15.3244, -9.43822 )
+shape_range = Vector2( 0, 2 )
+trigger = false
+
+[node name="pared" type="StaticBody2D" parent="."]
+
+editor/display_folded = true
+input/pickable = false
+shapes/0/shape = SubResource( 7 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/0/trigger = false
+shapes/1/shape = SubResource( 8 )
+shapes/1/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/1/trigger = false
+shapes/2/shape = SubResource( 9 )
+shapes/2/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/2/trigger = false
+collision/layers = 1
+collision/mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="pared"]
+
+build_mode = 0
+polygon = Vector2Array( 0, 0, 0, 300, -20, 300, -18, -14, 522, -18, 520, 310, 500, 306, 500, 0 )
+shape_range = Vector2( 0, 2 )
+trigger = false
+
+[connection signal="exit_viewport" from="bola/VisibilityNotifier2D" to="bola" method="_on_VisibilityNotifier2D_exit_viewport"]
+
+
